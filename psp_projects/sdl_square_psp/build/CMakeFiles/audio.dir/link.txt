@@ -1,0 +1,1 @@
+/home/mungdaal321/pspdev/bin/psp-gcc -I/home/mungdaal321/pspdev/psp/include -I/home/mungdaal321/pspdev/psp/sdk/include -DPSP -L/home/mungdaal321/pspdev/lib -L/home/mungdaal321/pspdev/psp/lib -L/home/mungdaal321/pspdev/psp/sdk/lib -Wl,-zmax-page-size=128 CMakeFiles/audio.dir/main.c.obj -o audio  -lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspaudio -lpspaudiolib -lpsputility

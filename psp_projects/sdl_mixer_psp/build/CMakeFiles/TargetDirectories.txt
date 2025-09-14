@@ -1,0 +1,3 @@
+/home/mungdaal321/Documents/PSP/psp_projects/sdl_mixer_psp/build/CMakeFiles/sdl2_mixer.dir
+/home/mungdaal321/Documents/PSP/psp_projects/sdl_mixer_psp/build/CMakeFiles/edit_cache.dir
+/home/mungdaal321/Documents/PSP/psp_projects/sdl_mixer_psp/build/CMakeFiles/rebuild_cache.dir

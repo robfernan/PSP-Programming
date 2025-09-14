@@ -1,0 +1,3 @@
+/home/mungdaal321/Documents/PSP/psp_projects/audio_psp/build/CMakeFiles/audio.dir
+/home/mungdaal321/Documents/PSP/psp_projects/audio_psp/build/CMakeFiles/edit_cache.dir
+/home/mungdaal321/Documents/PSP/psp_projects/audio_psp/build/CMakeFiles/rebuild_cache.dir
