@@ -1,5 +1,3 @@
-
-
 # SDL2_mixer PSP Example
 
 This project demonstrates using SDL2 and SDL2_mixer for audio playback and simple graphics, targeting both Linux and PSP (via emulator).

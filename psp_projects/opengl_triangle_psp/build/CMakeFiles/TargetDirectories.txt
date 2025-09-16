@@ -1,0 +1,3 @@
+/home/mungdaal321/Documents/PSP/psp_projects/opengl_triangle_psp/build/CMakeFiles/opengl_triangle_psp.dir
+/home/mungdaal321/Documents/PSP/psp_projects/opengl_triangle_psp/build/CMakeFiles/edit_cache.dir
+/home/mungdaal321/Documents/PSP/psp_projects/opengl_triangle_psp/build/CMakeFiles/rebuild_cache.dir
