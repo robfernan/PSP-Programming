@@ -1,125 +1,100 @@
-# PSP Homebrew Projects: Tutorial Series Overview
+# 🕹️ PSP-Programming
 
-Welcome! This repository is a collection of PlayStation Portable (PSP) homebrew projects, each based on step-by-step tutorials. Every project demonstrates a different aspect of PSP development using C, SDL2, and related libraries. All code is cross-platform and can be built for both PSP and Linux.
+**"Cross-Platform Homebrew: From Linux to Handheld Iron"**
 
-## � Getting Started
-
-These projects are designed for both PSP and Linux. You can build and run them on your PC (for development/testing) or on a real/emulated PSP.
-
-
-### Prerequisites
-
-- **For PSP builds:**
-  - [PSPSDK](https://github.com/pspdev/pspsdk) and [psp-cmake](https://github.com/pspdev/psptoolchain-extra) installed and in your PATH.
-  - [PPSSPP](https://www.ppsspp.org/) emulator (optional, for testing).
-
-- **For Linux builds:**
-  - Standard C development tools (gcc, make, cmake, SDL2, SDL2_image, SDL2_mixer, SDL2_ttf, etc.).
-  - On Fedora/Nobara:
-    ```bash
-    sudo dnf install gcc make cmake SDL2-devel SDL2_image-devel SDL2_mixer-devel SDL2_ttf-devel
-    ```
-  - On Ubuntu/Debian:
-    ```bash
-    sudo apt install build-essential cmake libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
-    ```
-
-- **For macOS builds:**
-  - Install [Homebrew](https://brew.sh/) if you don't have it:
-    ```bash
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    ```
-  - Then install dependencies:
-    ```bash
-    brew install cmake sdl2 sdl2_image sdl2_mixer sdl2_ttf
-    ```
-
-- **For Windows builds:**
-  - Use [MSYS2](https://www.msys2.org/) for a Unix-like environment and package management.
-  - After installing MSYS2, open the MSYS2 MinGW terminal and run:
-    ```bash
-    pacman -Syu
-    pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_mixer mingw-w64-x86_64-SDL2_ttf
-    ```
-  - Alternatively, you can use [WSL](https://docs.microsoft.com/en-us/windows/wsl/) to run a Linux environment on Windows and follow the Linux instructions above.
+A collection of PlayStation Portable (PSP) homebrew projects and tutorials using C, SDL2, and PSPSDK. This repository demonstrates low-level development with a cross-platform mindset—compile and test on **Linux** for speed, then deploy to a real **PSP** for the authentic experience.
 
 ---
 
-## �📚 Project List
+## ⚡ Technical Architecture
 
-| Project                | Description                                                                 |
-|------------------------|-----------------------------------------------------------------------------|
-| [hello_world_psp](psp_projects/hello_world_psp)         | Minimal Hello World for PSP using C and PSPSDK.                |
-| [drawing_square_psp](psp_projects/drawing_square_psp)   | Draws a red rectangle on a white background using SDL2.         |
-| [drawing_input_psp](psp_projects/drawing_input_psp)     | Demonstrates reading controller input and drawing shapes.        |
-| [drawing_sprite_psp](psp_projects/drawing_sprite_psp)   | Loads and displays a sprite image with SDL2_image.              |
-| [audio_psp](psp_projects/audio_psp)                     | Plays a WAV/OGG/MP3 file using native PSP audio or SDL2_mixer.  |
-| [cube_3d_psp](psp_projects/cube_3d_psp)                 | Renders a spinning 3D cube using PSP GU.                        |
-| [opengl_triangle_psp](psp_projects/opengl_triangle_psp) | Draws a triangle using OpenGL-style API on PSP.                 |
-| [sdl_square_psp](psp_projects/sdl_square_psp)           | SDL2 example: draws a green square, handles input.              |
-| [sdl_image_psp](psp_projects/sdl_image_psp)             | Loads and displays PNG images using SDL2_image.                 |
-| [sdl_mixer_psp](psp_projects/sdl_mixer_psp)             | Plays background music with SDL2_mixer, shows pause/resume.     |
-| [sdl_ttf_psp](psp_projects/sdl_ttf_psp)                 | Renders TrueType fonts with SDL2_ttf.                           |
-| [texture_mapping_psp](psp_projects/texture_mapping_psp) | Demonstrates texture mapping on PSP GU.                         |
+The PSP features a MIPS R4000-based CPU and a dedicated Media Engine. These projects leverage:
 
-
-## 🛠️ Building & Running
-
-Below are step-by-step instructions for building and running the projects on each platform. Replace `<project_folder>` with the folder of the project you want to build.
-
-### 🕹️ Building for PSP (All Platforms)
-1. Open a terminal and navigate to the project folder:
-  ```bash
-  cd psp_projects/<project_folder>
-  ```
-2. Create and enter the build directory:
-  ```bash
-  mkdir -p build
-  cd build
-  ```
-3. Run CMake with the PSP toolchain:
-  ```bash
-  psp-cmake ..
-  # Or, if psp-cmake is not in your PATH:
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=~/pspdev/psp/share/pspdev.cmake
-  ```
-4. Build the project:
-  ```bash
-  make or cmake --build .
-  ```
-5. The resulting `EBOOT.PBP` can be run in [PPSSPP](https://www.ppsspp.org/) or on a real PSP.
+* **PSP GU (Graphics Utility):** Direct access to hardware 3D rendering and texture mapping.
+* **SDL2 Layer:** Unified API for input and 2D rendering, making code portable between PC and console.
+* **Native SPU Audio:** Direct PCM/WAV streaming alongside `SDL2_mixer`.
 
 ---
-  # PSP Homebrew Projects: Tutorial Series Overview
+## 📦 Project Gallery
 
-  Welcome! This repository is a collection of PlayStation Portable (PSP) homebrew projects, each based on step-by-step tutorials. Every project demonstrates a different aspect of PSP development using C, SDL2, and related libraries. All code is cross-platform and can be built for both PSP and Linux.
-  
-  ## 🛠️ Building & Running
+| Project | Description | Preview |
+| :--- | :--- | :--- |
+| **Hello World** | Minimal C and PSPSDK implementation. | ![Hello World](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/hello_world_psp/images/Screenshot_20250913_234532.png) |
+| **3D Cube** | Renders a spinning 3D cube using PSP GU. | ![3D Cube](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/cube_3d_psp/images/Screenshot_20250915_164148.png) |
+| **Texture Mapping** | Demonstrates hardware-accelerated mapping on the GU. | ![Texture Mapping](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/texture_mapping_psp/images/Screenshot_20250915_190149.png) |
+| **SDL2 Image** | Loading and displaying PNGs via SDL2_image. | ![SDL Image](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/sdl_image_psp/images/Screenshot_20250914_050129.png) |
+| **SDL2 Mixer** | Background music logic with pause/resume support. | ![SDL Mixer](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/sdl_mixer_psp/images/Screenshot_20250914_135529.png) |
+| **OpenGL Triangle** | OpenGL-style API implementation on PSP hardware. | ![OpenGL Triangle](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/opengl_triangle_psp/images/Screenshot_20250915_175751.png) |
+| **Audio SPU** | Native audio playback for WAV/OGG/MP3. | ![Audio](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/audio_psp/images/Screenshot_20250914_042302.png) |
+| **SDL2 TTF** | Rendering TrueType fonts for high-quality UI text. | ![SDL TTF](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/sdl_ttf_psp/images/Screenshot_20250914_145746.png) |
+| **Input Debug** | Reading controller state and drawing dynamic shapes. | ![Input Debug](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/drawing_input_psp/images/Screenshot_20250914_041746.png) |
+| **Sprite Logic** | Handling positioning and movement of 2D assets. | ![Sprites](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/drawing_sprite_psp/images/Screenshot_20250914_040928.png) |
+| **SDL2 Squares** | Basic square rendering and input loop handling. | ![Squares](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/sdl_square_psp/images/Screenshot_20250914_044040.png) |
+| **Basic Geometry** | Drawing primitives (rectangles) on a clean background. | ![Drawing](https://github.com/robfernan/PSP-Programming/raw/main/psp_projects/drawing_square_psp/images/Screenshot_20250914_000316.png) |
 
-  - **Toolchain:** [PSPSDK](https://github.com/pspdev/pspsdk) and [psp-cmake](https://github.com/pspdev/psptoolchain-extra)
-  - **Emulator:** [PPSSPP](https://www.ppsspp.org/)
-  - **Build System:** CMake (use `psp-cmake` for PSP builds)
+---
 
-  **General Build Steps:**
-  ```bash
-  mkdir build
-  cd build
-  psp-cmake ..   # For PSP
-  make
-  ```
-  See each project’s README for Linux build instructions and asset requirements.
+## 🚀 OS-Specific Setup
 
-  ## ⚠️ Troubleshooting
+### **1. PSP Toolchain (Universal)**
 
-  - If EBOOT.PBP is not created or you get CMake errors about `create_pbp_file`, make sure you are using the `psp-cmake` script from your toolchain’s `bin` directory.
-  - For font/image/audio projects, required assets (fonts, images, music) must be in the build directory or as described in each project’s README.
-  - See each project’s README for more details and screenshots.
+To build for the console, you need the **PSPSDK**.
 
-  ## 🙏 Credits & Resources
+1. Follow the [pspdev/pspdev](https://github.com/pspdev/pspdev) instructions to install.
+2. Ensure `psp-cmake` is in your system PATH.
 
-- [PSPSDK](https://github.com/pspdev/pspsdk)
-- [SDL2](https://www.libsdl.org/)
-- [PPSSPP](https://www.ppsspp.org/)
-- [PSPDev Tutorials](https://pspdev.github.io/basic_programs.html)
-- [PSP Eight Sprites Tutorial](https://www.youtube.com/watch?v=Ox1fq4MuY_s&list=PLzs-CfF4VCbS83bQbHg1Tw-bqvfzr3C__)
-- All open-source contributors and the PSP homebrew community!
+### **2. PC Development (Testing/Linux)**
+
+For fast iteration, build these projects natively on your desktop:
+
+#### **Ubuntu / Debian / Linux Mint**
+
+```bash
+sudo apt update
+sudo apt install build-essential cmake libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+
+```
+
+#### **Fedora / Nobara**
+
+```bash
+sudo dnf install gcc make cmake SDL2-devel SDL2_image-devel SDL2_mixer-devel SDL2_ttf-devel
+
+```
+
+#### **Arch / Manjaro**
+
+```bash
+sudo pacman -S base-devel cmake sdl2 sdl2_image sdl2_mixer sdl2_ttf
+
+```
+
+---
+
+## 🛠️ Build Workflow
+
+1. **Navigate** to a project: `cd psp_projects/hello_world_psp`
+2. **Generate Build Files:**
+* **For PSP:** `mkdir build && cd build && psp-cmake ..`
+* **For PC:** `mkdir build && cd build && cmake ..`
+
+
+3. **Compile:** `make`
+4. **Run:**
+* **On PC:** Run the resulting binary: `./hello_world`
+* **On PSP:** Transfer `EBOOT.PBP` to `PSP/GAME/PROJECT_NAME/`.
+
+
+
+---
+
+## ❓ Why This Project?
+
+PSP development often feels like a "lost art" due to fragmented legacy toolchains. This repository serves as a modern bridge, allowing developers to use contemporary tools like **VS Code** and **CMake** to breathe new life into this legendary handheld.
+
+Special thanks to the [Pikuma](https://pikuma.com) courses and the [PSPDev](https://pspdev.github.io/) community for the foundational knowledge that made these modules possible.
+
+---
+
+**Happy Hacking!**
+*Created by [Robert Fernandez*](https://www.google.com/search?q=https://github.com/robfernan)
