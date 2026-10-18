@@ -14,10 +14,7 @@
   ],
   "icon": "media/icon.jpg",
   "activationEvents": [
-    "workspaceContains:**/CMakeLists.txt",
-    "workspaceContains:**/Cargo.toml",
-    "workspaceContains:**/build.zig",
-    "workspaceContains:**/*.pbp"
+    "onStartupFinished"
   ],
   "main": "./src/extension.js",
   "contributes": {
@@ -47,18 +44,21 @@
       "editor/title": [
         {
           "command": "psp.openLivePreview",
-          "group": "navigation@1",
-          "when": "resourceExtname =~ /\\.(c|cpp|h|rs|zig|mak|txt)$/i"
+          "group": "navigation@10"
         },
         {
           "command": "psp.runPPSSPP",
-          "group": "navigation@2",
-          "when": "resourceExtname =~ /\\.(c|cpp|h|rs|zig|mak|txt)$/i"
+          "group": "navigation@11"
         },
         {
           "command": "psp.openDashboard",
-          "group": "navigation@3",
-          "when": "resourceExtname =~ /\\.(c|cpp|h|rs|zig|mak|txt)$/i"
+          "group": "navigation@12"
+        }
+      ],
+      "editor/title/run": [
+        {
+          "command": "psp.runPPSSPP",
+          "group": "navigation@1"
         }
       ]
     }
