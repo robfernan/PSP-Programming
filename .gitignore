@@ -1,0 +1,50 @@
+# ==============================================================================
+# PSP Homebrew Development .gitignore
+# ==============================================================================
+
+# Local Toolchains & SDKs
+pspsdk/
+pspdev/
+toolchain/
+
+# Intermediate PSP Compiler Outputs
+*.o
+*.obj
+*.d
+*.elf
+*.prx
+*.sfo
+PARAM.SFO
+a.out
+a_out_strip.elf
+
+# PSP Packaging Binaries (Generate on build, don't track in Git)
+EBOOT.PBP
+
+# CMake Generated Files & Build Dirs
+build/
+bin/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile.cmake
+progress.marks
+TargetDirectories.txt
+*.ninja
+
+# Editor & IDE Configs
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosv
+*.sln.docstates
+*.swp
+*~
+
+# OS Artifacts
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

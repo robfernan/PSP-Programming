@@ -1,0 +1,44 @@
+name: PSP Homebrew CI & Nightly Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-psp:
+    name: Build All PSP Homebrew Demos
+    runs-on: ubuntu-latest
+    container:
+      image: pspdev/pspdev:latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build All PSP Demos
+        run: |
+          mkdir -p dist
+          for dir in psp_projects/*/; do
+            if [ -f "${dir}CMakeLists.txt" ]; then
+              echo "==> Building ${dir}..."
+              mkdir -p "${dir}build"
+              cd "${dir}build"
+              psp-cmake ..
+              make -j$(nproc)
+              proj_name=$(basename "${dir}")
+              if [ -f "EBOOT.PBP" ]; then
+                cp EBOOT.PBP "../../dist/${proj_name}_EBOOT.PBP"
+              fi
+              cd ../../
+            fi
+          done
+
+      - name: Upload EBOOT Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: psp-homebrew-nightly-eboot-pack
+          path: dist/
+          retention-days: 14
