@@ -47,18 +47,18 @@
       "editor/title": [
         {
           "command": "psp.openLivePreview",
-          "group": "navigation",
-          "when": "resourceExtname =~ /\\.(c|cpp|rs|zig|txt)/"
+          "group": "navigation@1",
+          "when": "resourceExtname in ['.c', '.cpp', '.h', '.rs', '.zig', '.txt']"
         },
         {
           "command": "psp.runPPSSPP",
-          "group": "navigation",
-          "when": "resourceExtname =~ /\\.(c|cpp|rs|zig|txt)/"
+          "group": "navigation@2",
+          "when": "resourceExtname in ['.c', '.cpp', '.h', '.rs', '.zig', '.txt']"
         },
         {
           "command": "psp.openDashboard",
-          "group": "navigation",
-          "when": "resourceExtname =~ /\\.(c|cpp|rs|zig|txt)/"
+          "group": "navigation@3",
+          "when": "resourceExtname in ['.c', '.cpp', '.h', '.rs', '.zig', '.txt']"
         }
       ]
     }
