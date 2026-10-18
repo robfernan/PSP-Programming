@@ -68,8 +68,15 @@ function activate(context) {
     // 2. Automated Installer / Doctor Command
     let installDisposable = vscode.commands.registerCommand('psp.installToolchain', function () {
         const platform = os.platform();
+        const existingPPSSPP = getPPSSPPPath();
+
+        if (existingPPSSPP && (fs.existsSync(existingPPSSPP) || existingPPSSPP === 'ppsspp')) {
+            vscode.window.showInformationMessage(`PSP Dev Studio: PPSSPP is already installed at: ${existingPPSSPP}`);
+            return;
+        }
+
         if (platform === 'win32') {
-            vscode.window.showInformationMessage('PSP Dev Studio: Windows installer detected. Launching winget / ppsspp setup...');
+            vscode.window.showInformationMessage('PSP Dev Studio: PPSSPP not detected. Installing via Windows Package Manager (winget)...');
             exec('winget install HenrikRydgard.PPSSPP --accept-source-agreements --accept-package-agreements', (err, stdout) => {
                 if (!err) {
                     vscode.window.showInformationMessage('PPSSPP installed successfully via winget!');
