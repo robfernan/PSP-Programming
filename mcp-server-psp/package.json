@@ -1,0 +1,21 @@
+{
+  "name": "mcp-server-psp",
+  "version": "1.0.0",
+  "description": "Model Context Protocol (MCP) server for PSP Homebrew Development, PS2-to-PSP porting, hardware guardrails, and PPSSPP automation.",
+  "main": "src/index.js",
+  "bin": {
+    "mcp-server-psp": "./src/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "psp",
+    "playstation-portable",
+    "homebrew",
+    "ppsspp",
+    "ps2",
+    "reverse-engineering"
+  ],
+  "author": "Robert Fernandez",
+  "license": "MIT"
+}
