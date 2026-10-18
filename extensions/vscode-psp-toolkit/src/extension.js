@@ -32,7 +32,9 @@ function activate(context) {
         if (activeEditor) {
             let currentDir = path.dirname(activeEditor.document.uri.fsPath);
             while (currentDir && currentDir !== path.dirname(currentDir)) {
-                if (fs.existsSync(path.join(currentDir, 'CMakeLists.txt'))) {
+                if (fs.existsSync(path.join(currentDir, 'CMakeLists.txt')) ||
+                    fs.existsSync(path.join(currentDir, 'Cargo.toml')) ||
+                    fs.existsSync(path.join(currentDir, 'build.zig'))) {
                     projectDir = currentDir;
                     break;
                 }
