@@ -1,0 +1,46 @@
+{
+  "name": "vscode-psp-toolkit",
+  "displayName": "PSP Dev Studio (PlayStation Portable)",
+  "description": "One-click build, diagnostics, and launch for PSP homebrew in PPSSPP. Automated toolchain checks, snippets, and templates.",
+  "version": "1.0.0",
+  "publisher": "robfernan",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Other"
+  ],
+  "icon": "media/icon.jpg",
+  "activationEvents": [
+    "workspaceContains:**/CMakeLists.txt",
+    "workspaceContains:**/*.pbp",
+    "onCommand:psp.runPPSSPP",
+    "onCommand:psp.openDashboard"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "psp.runPPSSPP",
+        "title": "PSP: Run Project in PPSSPP",
+        "icon": "$(play)"
+      },
+      {
+        "command": "psp.openDashboard",
+        "title": "PSP: Open Dev Studio Dashboard",
+        "icon": "$(dashboard)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "psp.runPPSSPP",
+          "group": "navigation",
+          "when": "resourceExtname =~ /\\.(c|cpp|rs|zig|txt)/"
+        }
+      ]
+    }
+  }
+}

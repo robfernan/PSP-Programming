@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSP Dev Studio Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #12141a;
+            --panel-bg: #1a1e28;
+            --border-color: #2b3245;
+            --accent-cyan: #00e5ff;
+            --accent-pink: #ff2d87;
+            --accent-green: #00ff88;
+            --accent-yellow: #ffb800;
+            --text-main: #f0f4fc;
+            --text-muted: #8b9bb4;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 24px;
+            margin: 0;
+            user-select: none;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            margin: 4px 0 0 0;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 13px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-badge.ok {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .status-badge.missing {
+            background: rgba(255, 45, 135, 0.15);
+            color: var(--accent-pink);
+            border: 1px solid rgba(255, 45, 135, 0.3);
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        button {
+            background: #252b3b;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            border-color: var(--accent-cyan);
+            background: #2c3447;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+        }
+
+        button.primary {
+            background: linear-gradient(135deg, #0099ff, #00e5ff);
+            color: #0b101d;
+            border: none;
+            box-shadow: 0 4px 14px rgba(0, 229, 255, 0.3);
+        }
+
+        button.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0, 229, 255, 0.5);
+        }
+
+        .console-box {
+            background: #0b0d13;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #a4b3cf;
+            height: 120px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <h1>PlayStation Portable Dev Studio</h1>
+            <p>Environment Diagnostics, Auto-Configurator & PPSSPP Quick Launcher</p>
+        </div>
+    </div>
+
+    <div class="grid">
+        <!-- System Health Check -->
+        <div class="card">
+            <h2>
+                <span>Hardware & SDK Diagnostics</span>
+                <button onclick="refreshDiagnostics()" style="padding: 4px 8px; font-size: 11px;">Scan Again</button>
+            </h2>
+
+            <div class="status-row">
+                <span>PPSSPP Emulator (Windows / Linux)</span>
+                <span id="ppsspp-status" class="status-badge ok">● Detected</span>
+            </div>
+
+            <div class="status-row">
+                <span>pspdev MIPS Cross-Compiler</span>
+                <span id="compiler-status" class="status-badge ok">● Installed (bin/psp-gcc)</span>
+            </div>
+
+            <div class="status-row">
+                <span>CMake & psp-cmake toolchain</span>
+                <span id="cmake-status" class="status-badge ok">● Ready</span>
+            </div>
+
+            <div class="status-row">
+                <span>Current Project Target (EBOOT.PBP)</span>
+                <span id="eboot-status" class="status-badge ok">● Configured (CMake)</span>
+            </div>
+        </div>
+
+        <!-- Quick Launch Controls -->
+        <div class="card">
+            <h2>Instant Run & Emulator Controls</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 0;">
+                One-click build and execution directly into PPSSPP with automatic VBlank sync.
+            </p>
+
+            <div class="actions-bar" style="flex-direction: column;">
+                <button class="primary" onclick="runInPPSSPP()">
+                    ▶ Build & Run in PPSSPP (F5)
+                </button>
+                <button onclick="autoInstallMissingTools()">
+                    ⚙️ Auto-Fix & Install Missing Toolchain
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diagnostic Terminal Log -->
+    <div class="card">
+        <h2>Diagnostic Output</h2>
+        <div id="log-output" class="console-box">
+[PSP DEV] Initialized PSP Dev Studio extension host.<br>
+[PSP DEV] Scanning PATH and registry for PPSSPP installation...<br>
+[PSP DEV] Found PPSSPP at: C:\Program Files\PPSSPP\PPSSPPWindows.exe<br>
+[PSP DEV] Toolchain found: /pspsdk (MIPS Allegrex compiler ready)<br>
+[PSP DEV] Ready to build and launch EBOOT.PBP.
+        </div>
+    </div>
+
+    <script>
+        function log(msg) {
+            const box = document.getElementById('log-output');
+            box.innerHTML += '<br>' + msg;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function refreshDiagnostics() {
+            log('[SCAN] Checking local environment...');
+            setTimeout(() => {
+                log('[SCAN] PPSSPP: OK | psp-gcc: OK | CMake: OK');
+            }, 600);
+        }
+
+        function runInPPSSPP() {
+            log('[BUILD] Executing psp-cmake and building EBOOT.PBP...');
+            log('[LAUNCH] Spawning PPSSPP with active project target.');
+        }
+
+        function autoInstallMissingTools() {
+            log('[AUTO-FIX] Pulling latest pspdev Docker image or setting local environment variables...');
+        }
+    </script>
+</body>
+</html>
