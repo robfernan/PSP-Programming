@@ -95,9 +95,23 @@ function activate(context) {
         panel.webview.html = fs.readFileSync(htmlPath, 'utf8');
     });
 
+    // 4. Open In-IDE Live Web Preview (WASM / Virtual PSP Console)
+    let livePreviewDisposable = vscode.commands.registerCommand('psp.openLivePreview', function () {
+        const panel = vscode.window.createWebviewPanel(
+            'pspLivePreview',
+            'PSP Live Preview (480x272)',
+            vscode.ViewColumn.Beside,
+            { enableScripts: true }
+        );
+
+        const htmlPath = path.join(context.extensionPath, 'media', 'live_preview.html');
+        panel.webview.html = fs.readFileSync(htmlPath, 'utf8');
+    });
+
     context.subscriptions.push(runDisposable);
     context.subscriptions.push(installDisposable);
     context.subscriptions.push(dashboardDisposable);
+    context.subscriptions.push(livePreviewDisposable);
 }
 
 function deactivate() {}

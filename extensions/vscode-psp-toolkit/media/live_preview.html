@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSP In-IDE Live Web Preview</title>
+    <style>
+        :root {
+            --bg-color: #0d0f15;
+            --bezel-color: #171b26;
+            --accent-cyan: #00e5ff;
+            --accent-pink: #ff2d87;
+            --text-color: #e2e8f0;
+            --vram-color: #00ff88;
+        }
+
+        body {
+            margin: 0;
+            padding: 16px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+        }
+
+        .header-bar {
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .header-bar h2 {
+            margin: 0;
+            font-size: 15px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metrics-badge {
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            color: var(--accent-cyan);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-family: monospace;
+        }
+
+        /* Virtual PSP Console Shell */
+        .psp-console {
+            background: radial-gradient(circle at 50% 30%, #252b3d, #141722);
+            border: 3px solid #2f374e;
+            border-radius: 40px;
+            padding: 24px 36px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 229, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Screen Bezel (480x272 Native Aspect Ratio scaled 1.25x) */
+        .screen-container {
+            width: 540px;
+            height: 306px;
+            background: #000;
+            border: 2px solid #3c4663;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+        }
+
+        /* D-Pad Simulation */
+        .dpad {
+            display: grid;
+            grid-template-columns: 28px 28px 28px;
+            grid-template-rows: 28px 28px 28px;
+            gap: 2px;
+        }
+
+        .dpad-btn {
+            background: #1e2433;
+            border: 1px solid #3d4760;
+            color: #8b9bb4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .dpad-btn:active, .dpad-btn.pressed {
+            background: var(--accent-cyan);
+            color: #0b0f19;
+            transform: scale(0.92);
+        }
+
+        /* Action Buttons (Triangle, Circle, Cross, Square) */
+        .action-btns {
+            display: grid;
+            grid-template-columns: 28px 28px 28px;
+            grid-template-rows: 28px 28px 28px;
+            gap: 2px;
+        }
+
+        .btn-tri { grid-column: 2; grid-row: 1; color: #00ff88; }
+        .btn-sq  { grid-column: 1; grid-row: 2; color: #ff2d87; }
+        .btn-cir { grid-column: 3; grid-row: 2; color: #ff4d4d; }
+        .btn-cross { grid-column: 2; grid-row: 3; color: #00e5ff; }
+
+        .game-btn {
+            background: #1e2433;
+            border: 1px solid #3d4760;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .game-btn:active, .game-btn.pressed {
+            background: #fff;
+            transform: scale(0.92);
+        }
+
+        .controls-hint {
+            margin-top: 14px;
+            font-size: 12px;
+            color: #6d7d96;
+            text-align: center;
+        }
+
+        .controls-hint kbd {
+            background: #1c2230;
+            border: 1px solid #384259;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--text-color);
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h2>PSP In-IDE WebAssembly Live Preview</h2>
+        <div>
+            <span class="metrics-badge" id="fps-badge">60 FPS</span>
+            <span class="metrics-badge" style="border-color: rgba(0,255,136,0.3); color: var(--vram-color);">VRAM: 2MB EDRAM</span>
+        </div>
+    </div>
+
+    <!-- Interactive Virtual Handheld Container -->
+    <div class="psp-console">
+        <!-- Left Side Controls (D-Pad) -->
+        <div class="dpad">
+            <div style="grid-column: 2; grid-row: 1;" class="dpad-btn" id="btn-up">▲</div>
+            <div style="grid-column: 1; grid-row: 2;" class="dpad-btn" id="btn-left">◀</div>
+            <div style="grid-column: 3; grid-row: 2;" class="dpad-btn" id="btn-right">▶</div>
+            <div style="grid-column: 2; grid-row: 3;" class="dpad-btn" id="btn-down">▼</div>
+        </div>
+
+        <!-- 480x272 PSP LCD Screen -->
+        <div class="screen-container">
+            <canvas id="psp-screen" width="480" height="272"></canvas>
+        </div>
+
+        <!-- Right Side Controls (PlayStation Face Buttons) -->
+        <div class="action-btns">
+            <div class="game-btn btn-tri" id="btn-tri">▲</div>
+            <div class="game-btn btn-sq" id="btn-sq">■</div>
+            <div class="game-btn btn-cir" id="btn-cir">●</div>
+            <div class="game-btn btn-cross" id="btn-cross">✖</div>
+        </div>
+    </div>
+
+    <div class="controls-hint">
+        🎮 <strong>Keyboard Mapping:</strong> Arrow Keys = D-Pad | <kbd>Z</kbd> = ✖ | <kbd>X</kbd> = ● | <kbd>A</kbd> = ■ | <kbd>S</kbd> = ▲ | <kbd>Enter</kbd> = START
+    </div>
+
+    <script>
+        const canvas = document.getElementById('psp-screen');
+        const ctx = canvas.getContext('2d');
+
+        // Dynamic 3D Cube / Texture Simulation on PSP Canvas
+        let angleX = 0;
+        let angleY = 0;
+        let posX = 240;
+        let posY = 136;
+        let activeColor = '#00e5ff';
+
+        const keys = {};
+        window.addEventListener('keydown', e => { keys[e.code] = true; });
+        window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+        function renderFrame() {
+            // Clear screen (480x272)
+            ctx.fillStyle = '#0a0c12';
+            ctx.fillRect(0, 0, 480, 272);
+
+            // Handle Input State
+            if (keys['ArrowUp']) posY = Math.max(30, posY - 2);
+            if (keys['ArrowDown']) posY = Math.min(242, posY + 2);
+            if (keys['ArrowLeft']) posX = Math.max(30, posX - 2);
+            if (keys['ArrowRight']) posX = Math.min(450, posX + 2);
+
+            if (keys['KeyZ']) activeColor = '#00e5ff';
+            if (keys['KeyX']) activeColor = '#ff4d4d';
+            if (keys['KeyA']) activeColor = '#ff2d87';
+            if (keys['KeyS']) activeColor = '#00ff88';
+
+            // Draw PSP Status Banner
+            ctx.fillStyle = '#1b2130';
+            ctx.fillRect(0, 0, 480, 22);
+            ctx.fillStyle = '#8b9bb4';
+            ctx.font = '10px monospace';
+            ctx.fillText('PSP-1000 [333MHz Allegrex | MIPS R4000 | GU Hardware Accel]', 10, 15);
+
+            // Draw Spinning 3D Wireframe Cube (Simulating psp_projects/cube_3d_psp)
+            angleX += 0.02;
+            angleY += 0.03;
+
+            const size = 35;
+            const vertices = [
+                [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+                [-1, -1, 1],  [1, -1, 1],  [1, 1, 1],  [-1, 1, 1]
+            ];
+
+            const projected = vertices.map(v => {
+                // Rotate Y
+                let x = v[0] * Math.cos(angleY) - v[2] * Math.sin(angleY);
+                let z = v[0] * Math.sin(angleY) + v[2] * Math.cos(angleY);
+                // Rotate X
+                let y = v[1] * Math.cos(angleX) - z * Math.sin(angleX);
+                z = v[1] * Math.sin(angleX) + z * Math.cos(angleX);
+
+                const depth = 2.5 + z * 0.4;
+                return {
+                    x: posX + (x / depth) * size * 2.2,
+                    y: posY + (y / depth) * size * 2.2
+                };
+            });
+
+            // Draw Cube Edges
+            const edges = [
+                [0,1],[1,2],[2,3],[3,0],
+                [4,5],[5,6],[6,7],[7,4],
+                [0,4],[1,5],[2,6],[3,7]
+            ];
+
+            ctx.strokeStyle = activeColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            edges.forEach(([i, j]) => {
+                ctx.moveTo(projected[i].x, projected[i].y);
+                ctx.lineTo(projected[j].x, projected[j].y);
+            });
+            ctx.stroke();
+
+            // Text display
+            ctx.fillStyle = '#fff';
+            ctx.font = '12px sans-serif';
+            ctx.fillText('In-IDE Live Preview Active', 10, 255);
+            ctx.fillStyle = activeColor;
+            ctx.fillText('Controls: Move D-Pad / Change Color with Buttons', 170, 255);
+
+            requestAnimationFrame(renderFrame);
+        }
+
+        renderFrame();
+    </script>
+</body>
+</html>

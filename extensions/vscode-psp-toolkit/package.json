@@ -26,6 +26,11 @@
         "icon": "$(play)"
       },
       {
+        "command": "psp.openLivePreview",
+        "title": "PSP: Open In-IDE Live Preview",
+        "icon": "$(device-mobile)"
+      },
+      {
         "command": "psp.openDashboard",
         "title": "PSP: Open Dev Studio Dashboard",
         "icon": "$(dashboard)"
@@ -38,6 +43,11 @@
     ],
     "menus": {
       "editor/title": [
+        {
+          "command": "psp.openLivePreview",
+          "group": "navigation",
+          "when": "resourceExtname =~ /\\.(c|cpp|rs|zig|txt)/"
+        },
         {
           "command": "psp.runPPSSPP",
           "group": "navigation",
