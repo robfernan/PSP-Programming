@@ -84,32 +84,52 @@ function activate(context) {
         const outputChannel = vscode.window.createOutputChannel('PSP Dev Studio');
         outputChannel.clear();
         outputChannel.show(true);
-        outputChannel.appendLine(`[PSP Dev Studio] Detected ${projectType} project in: ${projectDir}`);
-        outputChannel.appendLine(`[PSP Dev Studio] Running command: ${buildCmd}\n`);
+        outputChannel.appendLine(`[PSP Dev Studio] Target Project: ${projectDir} (${projectType})`);
+
+        function launchInPPSSPP(ebootFile) {
+            outputChannel.appendLine(`[PSP Dev Studio] Launching PPSSPP with: ${ebootFile}`);
+            vscode.window.showInformationMessage(`PSP Dev Studio: Launching ${path.basename(projectDir)} in PPSSPP!`);
+            const { spawn } = require('child_process');
+            const child = spawn(ppssppExecutable, [ebootFile], { detached: true, stdio: 'ignore' });
+            child.unref();
+        }
+
+        const existingEboot = candidateEbootPaths.find(p => fs.existsSync(p));
+
+        if (!buildCmd) {
+            if (existingEboot) {
+                launchInPPSSPP(existingEboot);
+            } else {
+                vscode.window.showErrorMessage(`PSP Dev Studio: No EBOOT.PBP found for ${path.basename(projectDir)}.`);
+            }
+            return;
+        }
 
         vscode.window.showInformationMessage(`PSP Dev Studio: Building & Launching [${path.basename(projectDir)}] (${projectType})...`);
+        outputChannel.appendLine(`[PSP Dev Studio] Running command: ${buildCmd}\n`);
 
         exec(buildCmd, { cwd: projectDir }, (err, stdout, stderr) => {
             if (stdout) { outputChannel.append(stdout); }
             if (stderr) { outputChannel.append(stderr); }
             if (err) {
-                outputChannel.appendLine(`\n[PSP Dev Studio] Process exited with error: ${err.message}`);
+                outputChannel.appendLine(`\n[PSP Dev Studio] Process error: ${err.message}`);
             }
 
             const foundEboot = candidateEbootPaths.find(p => fs.existsSync(p));
 
             if (foundEboot) {
-                outputChannel.appendLine(`\n[PSP Dev Studio] Found EBOOT: ${foundEboot}`);
-                vscode.window.showInformationMessage(`PSP Dev Studio: Launching ${path.basename(projectDir)} in PPSSPP!`);
-                exec(`"${ppssppExecutable}" "${foundEboot}"`);
+                launchInPPSSPP(foundEboot);
+            } else if (existingEboot) {
+                outputChannel.appendLine(`\n[PSP Dev Studio] Rebuild failed, but found pre-existing EBOOT at: ${existingEboot}`);
+                launchInPPSSPP(existingEboot);
             } else {
-                outputChannel.appendLine(`\n[PSP Dev Studio] Build failed or EBOOT.PBP was not found in candidate paths:`);
+                outputChannel.appendLine(`\n[PSP Dev Studio] Build failed and no EBOOT.PBP was found in candidate paths:`);
                 candidateEbootPaths.forEach(p => outputChannel.appendLine(`  - ${p}`));
 
                 if (projectType === 'Rust' && err) {
                     vscode.window.showErrorMessage('PSP Dev Studio: Rust build failed. Make sure cargo-psp is installed (`cargo install cargo-psp`). See Output panel.');
                 } else if (err) {
-                    vscode.window.showErrorMessage(`PSP Dev Studio: Compilation failed for ${projectType}. Check Output panel for details.`);
+                    vscode.window.showErrorMessage(`PSP Dev Studio: Build failed for ${projectType}. Check Output panel for details.`);
                 } else {
                     vscode.window.showWarningMessage('PSP Dev Studio: Compiled, but EBOOT.PBP was not found. Check compiler output in the Output panel.');
                 }
