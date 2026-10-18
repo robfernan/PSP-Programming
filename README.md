@@ -4,35 +4,48 @@
   <img src="https://img.shields.io/badge/Platform-Sony%20PSP%20%7C%20PPSSPP-003791?style=for-the-badge&logo=playstation&logoColor=white" alt="PSP" />
   <img src="https://img.shields.io/badge/CI-Automated%20Builds-success?style=for-the-badge&logo=github-actions&logoColor=white" alt="CI" />
   <img src="https://img.shields.io/badge/VS%20Code-PSP%20Dev%20Studio-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="VS Code Extension" />
+  <img src="https://img.shields.io/badge/AI%20Protocol-Official%20MCP%20Server-FF6F00?style=for-the-badge" alt="MCP Server" />
   <img src="https://img.shields.io/badge/Stack-C%20%7C%20SDL2%20%7C%20Rust%20%7C%20Zig-blueviolet?style=for-the-badge" alt="Stack" />
   <img src="https://img.shields.io/badge/Toolchain-pspdev%20%2F%20Docker-orange?style=for-the-badge&logo=docker" alt="Docker" />
 </p>
 
 <p align="center">
   <strong>"The Modern PlayStation Portable Development & Porting Hub"</strong><br>
-  Cross-Platform Homebrew, PS2-to-PSP Reverse Engineering Architecture, VS Code Extension, Automated CI/CD, and Next-Gen Toolchains (C, SDL2, Rust & Zig).
+  Cross-Platform Homebrew, In-IDE Multi-Model Handheld Preview, Model Context Protocol (MCP) Server, PS2-to-PSP Reverse Engineering Architecture, and Next-Gen Toolchains (C, SDL2, Rust & Zig).
 </p>
 
 ---
 
-## 🚀 Highlights & Features
+## 🚀 Key Features in this Repository
 
-### 🧩 1. Official VS Code Extension: `PSP Dev Studio`
-Included in [`extensions/vscode-psp-toolkit/`](extensions/vscode-psp-toolkit/):
-* **Top-Bar Quick Play (`▶`)**: One-click build and launch of the active project directly into the **PPSSPP** emulator.
-* **Environment Doctor & Dashboard (`📊`)**: Interactive diagnostic window checking MIPS compilers, CMake, and emulator installation with automatic auto-install via `winget` (Windows) / `brew` (macOS) / `flatpak` (Linux).
-* **Cross-Platform**: Zero configuration needed on Windows 11, macOS, and Linux.
+### 📱 1. Official VS Code Extension: `PSP Dev Studio`
+Located in [`extensions/vscode-psp-toolkit/`](extensions/vscode-psp-toolkit/):
+* **In-IDE Multi-Model Live Preview (`📱`)**: Run interactive 60 FPS WebAssembly canvas graphics directly inside your editor. Switch between **Frameless**, **PSP-1000 ("Phat")**, **PSP Go (Slider)**, and **PSP Street (E1000)** with real-time on-screen clickable touch controls!
+* **Top-Bar Instant Emulator Runner (`▶`)**: One-click build and execution directly into desktop **PPSSPP**.
+* **Environment Doctor & Dashboard (`📊`)**: Scans your PATH for compilers and emulators with automated single-click installs via `winget` (Windows 11), `brew` (macOS), or `flatpak` (Linux).
 
-### 🔄 2. PS2-to-PSP Reverse Engineering & Porting Architecture
-Explore our technical manifesto on how modern REA agents, decompilation pipelines, and emulators translate PlayStation 2 (Emotion Engine MIPS R5900) games to run natively on PSP (Allegrex R4000) hardware:
+### 🤖 2. Model Context Protocol (MCP) Server: `mcp-server-psp`
+Located in [`mcp-server-psp/`](mcp-server-psp/):
+* Equips AI agents (Claude, Cursor, Antigravity, VS Code Copilot) with native PSP hardware guardrails.
+* **Tools exposed**:
+  - `psp_hardware_lint`: Verifies 32MB RAM baseline, VRAM padding, power-of-2 texture dimensions (max 512x512), and VBlank sync.
+  - `ps2_to_psp_transpile_advice`: Analyzes PS2 Emotion Engine (MIPS R5900) and VU0/VU1 microcode to generate PSP Allegrex R4000 & VFPU conversion recipes.
+  - `psp_scaffold_project`: Generates boilerplate templates with build configs in C, SDL2, Rust, or Zig.
+  - `psp_launch_emulator`: Triggers builds and launches PPSSPP programmatically.
+
+### 🛡️ 3. Universal Hardware Compatibility Layer
+Located in [`shared/`](shared/):
+* Adopts the **PSP-1000 (32MB RAM)** as the universal baseline so your homebrew runs on 100% of physical PSP consoles.
+* Provides runtime detection (`pspCompatHasExtendedRam()`) to dynamically scale memory and features on 64MB models (Slim, Brite, Go, Street).
+* Includes Wi-Fi safety guards to prevent crashing on the network-less PSP Street (E1000).
+
+### 🔄 4. PS2-to-PSP Reverse Engineering Architecture
+Read our comprehensive technical guide on how modern REA agents and decompilers port PS2 titles to the PSP:
 * Read the [PS2 to PSP Porting Manifesto](docs/porting_guide/ps2_to_psp_rea.md).
-* Covers instruction downscaling, VU0/VU1 microcode mapping to VFPU, and VRAM memory budgeting ($4\text{MB} \to 2\text{MB}$).
+* Covers 128-bit SIMD to 32-bit VFPU transpilations, texture memory budgeting ($4\text{MB} \to 2\text{MB}$), and Little-Endian MIPS binary compatibility.
 
-### ⚡ 3. Automated CI/CD Nightly Builds
-Every push triggers our GitHub Actions pipeline (`.github/workflows/build.yml`) inside the official `pspdev/pspdev` container, compiling all demos and publishing a **Nightly EBOOT Pack** downloadable under Workflow Artifacts.
-
-### 🤖 4. Antigravity & Agent AI Ready
-Includes a dedicated AI skill in [`.agents/skills/psp-dev`](.agents/skills/psp-dev/SKILL.md) that teaches AI coding assistants PSP hardware limits (32MB RAM, VRAM pitch padding, power-of-2 textures, and kernel exit callbacks) to pair-program without crashing hardware.
+### ⚡ 5. Automated GitHub Actions CI/CD Nightly Builds
+Every commit triggers our GitHub Actions pipeline (`.github/workflows/build.yml`) using the official `pspdev/pspdev` container, automatically compiling all demos and publishing a **Nightly EBOOT Pack** under Workflow Artifacts.
 
 ---
 
@@ -40,9 +53,11 @@ Includes a dedicated AI skill in [`.agents/skills/psp-dev`](.agents/skills/psp-d
 
 ```mermaid
 graph LR
-    subgraph Host ["Workstation / Emulator Loop"]
+    subgraph Host ["Workstation / AI Agent Loop"]
         PC_Source["Cross-Platform Source (C / SDL2 / Rust / Zig)"]
         VSCode["PSP Dev Studio (VS Code Extension)"]
+        MCP["mcp-server-psp (Model Context Protocol)"]
+        LivePreview["In-IDE Virtual Handheld Live Preview"]
         PPSSPP["PPSSPP Emulator (Fast Iteration)"]
     end
 
@@ -57,7 +72,9 @@ graph LR
         MemoryStick["/PSP/GAME/<TITLE>/EBOOT.PBP"]
     end
 
+    PC_Source --> VSCode --> LivePreview
     PC_Source --> VSCode --> PPSSPP
+    PC_Source --> MCP
     PC_Source --> Docker --> BuildPack --> MemoryStick
     BuildPack --> Allegrex
     Allegrex --> GE
@@ -89,9 +106,10 @@ graph LR
 ## 🛠️ Build Workflow
 
 ### Using the VS Code Extension
-1. Open this repository in VS Code.
-2. Open any file in `psp_projects/<project_name>/`.
-3. Click the **Play (`▶`)** button in the top-right header, or run `Ctrl+Shift+B`.
+1. Open this repository in VS Code or Antigravity.
+2. Open any source file in `psp_projects/<project_name>/`.
+3. Click the **Device Icon (`📱`)** in the top-right header for the In-IDE Live Web Preview.
+4. Click the **Play (`▶`)** button to launch in desktop PPSSPP, or run `Ctrl+Shift+B`.
 
 ### Command Line
 1. **Navigate** to a project: `cd psp_projects/hello_world_psp`
@@ -109,11 +127,12 @@ graph LR
 
 - [x] **Automated CI/CD**: Nightly compilation of all homebrew projects with downloadable EBOOT artifacts.
 - [x] **PS2-to-PSP Porting Manifesto**: Architecture guides for decompilation and REA targeting Allegrex hardware.
-- [x] **VS Code Extension (`PSP Dev Studio`)**: Top-bar instant run button and diagnostics webview.
+- [x] **Universal Compatibility Layer**: 32MB RAM baseline floor with progressive 64MB scaling.
+- [x] **Model Context Protocol (MCP) Server**: AI agent tool provider for hardware linting & porting recipes.
+- [x] **VS Code Extension (`PSP Dev Studio`)**: Top-bar instant run button, doctor diagnostics, and multi-model live preview.
 - [ ] **Marketplace Packaging (`.vsix`)**: Package the VS Code extension for one-click marketplace install.
-- [ ] **In-Browser PPSSPP WASM Player**: Embedded playable demo directly on GitHub Pages.
-- [ ] **Standalone Windows MSI Installer**: Automated bundled installer for PPSSPP, toolchain paths, and VS Code extension.
-- [ ] **Cross-Play Networking Demo**: Ad-Hoc socket communication between PSP and PC client.
+- [ ] **Standalone Windows 11 Automated Installer**: 1-click script bundling PPSSPP and toolchain configurations.
+- [ ] **PSP Ad-Hoc $\leftrightarrow$ PC Cross-Play Networking Demo**: Real-time multiplayer socket packets between PSP and PC.
 
 ---
 
