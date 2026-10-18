@@ -110,7 +110,7 @@ function activate(context) {
             buildCmd = 'cargo psp --release';
         } else if (projectType === 'Zig') {
             if (isWindows) {
-                buildCmd = `docker run --rm -v "${workspaceRoot}:/workspace" -w "${workdirInContainer}" pspdev/pspdev:latest sh -c "zig build"`;
+                buildCmd = `docker run --rm -v "${workspaceRoot}:/workspace" -w "${workdirInContainer}" pspdev/pspdev:latest sh -c "mkdir -p build && zig build-obj -target mipsel-freestanding -mcpu=mips2 main.zig -femit-bin=build/zig_logic.o && psp-gcc -Wl,--no-warn-mismatch -I/usr/local/pspdev/psp/sdk/include -L/usr/local/pspdev/psp/sdk/lib psp_entry.c build/zig_logic.o -lpspgu -lpspdisplay -lpspge -lpspctrl -lc -o build/zig_cube_psp.elf && psp-fixup-imports build/zig_cube_psp.elf && mksfoex -d MEMSIZE=1 'Zig Cube PSP' build/PARAM.SFO && pack-pbp build/EBOOT.PBP build/PARAM.SFO NULL NULL NULL NULL NULL build/zig_cube_psp.elf NULL"`;
             } else {
                 buildCmd = 'zig build';
             }
