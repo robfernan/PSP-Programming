@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,6 +124,7 @@
             height: 344px;
             position: relative;
         }
+
         .skin-psp1000 .console-bg {
             position: absolute;
             top: 0;
@@ -132,6 +134,7 @@
             pointer-events: none;
             z-index: 2;
         }
+
         .skin-psp1000 .screen-mount {
             position: absolute;
             top: 30px;
@@ -141,6 +144,7 @@
             z-index: 1;
             background: #000;
         }
+
         .skin-psp1000 .screen-mount canvas {
             width: 456px;
             height: 258px;
@@ -152,6 +156,7 @@
             height: 440px;
             position: relative;
         }
+
         .skin-pspgo .console-bg {
             position: absolute;
             top: 0;
@@ -161,6 +166,7 @@
             pointer-events: none;
             z-index: 2;
         }
+
         .skin-pspgo .screen-mount {
             position: absolute;
             top: 97px;
@@ -170,6 +176,7 @@
             z-index: 1;
             background: #000;
         }
+
         .skin-pspgo .screen-mount canvas {
             width: 222px;
             height: 126px;
@@ -181,6 +188,7 @@
             height: 318px;
             position: relative;
         }
+
         .skin-street .console-bg {
             position: absolute;
             top: 0;
@@ -190,15 +198,17 @@
             pointer-events: none;
             z-index: 2;
         }
+
         .skin-street .screen-mount {
             position: absolute;
             top: 25px;
             left: 163px;
             width: 424px;
             height: 243px;
-            z-index: 1;
+            z-index: 5;
             background: #000;
         }
+
         .skin-street .screen-mount canvas {
             width: 424px;
             height: 243px;
@@ -213,34 +223,144 @@
             background: rgba(0, 229, 255, 0.0);
             transition: background 0.1s;
         }
-        .hitbox:active, .hitbox.pressed {
+
+        .hitbox:active,
+        .hitbox.pressed {
             background: rgba(0, 229, 255, 0.35);
             box-shadow: 0 0 12px var(--accent-cyan);
         }
 
         /* Hitbox positioning for PSP-1000 */
-        .skin-psp1000 .hitbox-dpad-up    { top: 90px; left: 54px; width: 34px; height: 34px; border-radius: 6px; }
-        .skin-psp1000 .hitbox-dpad-down  { top: 165px; left: 54px; width: 34px; height: 34px; border-radius: 6px; }
-        .skin-psp1000 .hitbox-dpad-left  { top: 128px; left: 18px; width: 34px; height: 34px; border-radius: 6px; }
-        .skin-psp1000 .hitbox-dpad-right { top: 128px; left: 90px; width: 34px; height: 34px; border-radius: 6px; }
-        .skin-psp1000 .hitbox-analog     { top: 220px; left: 40px; width: 48px; height: 48px; }
+        .skin-psp1000 .hitbox-dpad-up {
+            top: 90px;
+            left: 54px;
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+        }
 
-        .skin-psp1000 .hitbox-tri   { top: 86px; left: 708px; width: 34px; height: 34px; }
-        .skin-psp1000 .hitbox-sq    { top: 124px; left: 668px; width: 34px; height: 34px; }
-        .skin-psp1000 .hitbox-cir   { top: 124px; left: 746px; width: 34px; height: 34px; }
-        .skin-psp1000 .hitbox-cross { top: 164px; left: 708px; width: 34px; height: 34px; }
+        .skin-psp1000 .hitbox-dpad-down {
+            top: 165px;
+            left: 54px;
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+        }
+
+        .skin-psp1000 .hitbox-dpad-left {
+            top: 128px;
+            left: 18px;
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+        }
+
+        .skin-psp1000 .hitbox-dpad-right {
+            top: 128px;
+            left: 90px;
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+        }
+
+        .skin-psp1000 .hitbox-analog {
+            top: 220px;
+            left: 40px;
+            width: 48px;
+            height: 48px;
+        }
+
+        .skin-psp1000 .hitbox-tri {
+            top: 86px;
+            left: 708px;
+            width: 34px;
+            height: 34px;
+        }
+
+        .skin-psp1000 .hitbox-sq {
+            top: 124px;
+            left: 668px;
+            width: 34px;
+            height: 34px;
+        }
+
+        .skin-psp1000 .hitbox-cir {
+            top: 124px;
+            left: 746px;
+            width: 34px;
+            height: 34px;
+        }
+
+        .skin-psp1000 .hitbox-cross {
+            top: 164px;
+            left: 708px;
+            width: 34px;
+            height: 34px;
+        }
 
         /* Hitbox positioning for PSP Go */
-        .skin-pspgo .hitbox-dpad-up    { top: 268px; left: 118px; width: 28px; height: 28px; }
-        .skin-pspgo .hitbox-dpad-down  { top: 326px; left: 118px; width: 28px; height: 28px; }
-        .skin-pspgo .hitbox-dpad-left  { top: 297px; left: 90px; width: 28px; height: 28px; }
-        .skin-pspgo .hitbox-dpad-right { top: 297px; left: 146px; width: 28px; height: 28px; }
-        .skin-pspgo .hitbox-analog     { top: 290px; left: 168px; width: 36px; height: 36px; }
+        .skin-pspgo .hitbox-dpad-up {
+            top: 268px;
+            left: 118px;
+            width: 28px;
+            height: 28px;
+        }
 
-        .skin-pspgo .hitbox-tri   { top: 268px; left: 298px; width: 28px; height: 28px; }
-        .skin-pspgo .hitbox-sq    { top: 297px; left: 268px; width: 28px; height: 28px; }
-        .skin-pspgo .hitbox-cir   { top: 297px; left: 326px; width: 28px; height: 28px; }
-        .skin-pspgo .hitbox-cross { top: 326px; left: 298px; width: 28px; height: 28px; }
+        .skin-pspgo .hitbox-dpad-down {
+            top: 326px;
+            left: 118px;
+            width: 28px;
+            height: 28px;
+        }
+
+        .skin-pspgo .hitbox-dpad-left {
+            top: 297px;
+            left: 90px;
+            width: 28px;
+            height: 28px;
+        }
+
+        .skin-pspgo .hitbox-dpad-right {
+            top: 297px;
+            left: 146px;
+            width: 28px;
+            height: 28px;
+        }
+
+        .skin-pspgo .hitbox-analog {
+            top: 290px;
+            left: 168px;
+            width: 36px;
+            height: 36px;
+        }
+
+        .skin-pspgo .hitbox-tri {
+            top: 268px;
+            left: 298px;
+            width: 28px;
+            height: 28px;
+        }
+
+        .skin-pspgo .hitbox-sq {
+            top: 297px;
+            left: 268px;
+            width: 28px;
+            height: 28px;
+        }
+
+        .skin-pspgo .hitbox-cir {
+            top: 297px;
+            left: 326px;
+            width: 28px;
+            height: 28px;
+        }
+
+        .skin-pspgo .hitbox-cross {
+            top: 326px;
+            left: 298px;
+            width: 28px;
+            height: 28px;
+        }
 
         .footer-keys {
             font-size: 12px;
@@ -258,6 +378,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="toolbar">
@@ -303,7 +424,8 @@
     </div>
 
     <div class="footer-keys">
-        🎮 <strong>Interactive Handheld Touchpad:</strong> Click the real console buttons on-screen or use Keyboard: Arrow Keys = D-Pad | <kbd>Z</kbd> = ✖ | <kbd>X</kbd> = ● | <kbd>A</kbd> = ■ | <kbd>S</kbd> = ▲
+        🎮 <strong>Interactive Handheld Touchpad:</strong> Click the real console buttons on-screen or use Keyboard:
+        Arrow Keys = D-Pad | <kbd>Z</kbd> = ✖ | <kbd>X</kbd> = ● | <kbd>A</kbd> = ■ | <kbd>S</kbd> = ▲
     </div>
 
     <script>
@@ -341,7 +463,7 @@
                 hitboxBox.style.display = 'block';
             } else if (model === 'street') {
                 consoleArt.style.display = 'block';
-                consoleArt.src = 'psp-street-frame.svg';
+                consoleArt.src = 'PSP_E1000_illustration.svg';
                 hitboxBox.style.display = 'none';
             }
         }
@@ -411,7 +533,7 @@
             const size = 36;
             const vertices = [
                 [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
-                [-1, -1, 1],  [1, -1, 1],  [1, 1, 1],  [-1, 1, 1]
+                [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]
             ];
 
             const projected = vertices.map(v => {
@@ -428,9 +550,9 @@
             });
 
             const edges = [
-                [0,1],[1,2],[2,3],[3,0],
-                [4,5],[5,6],[6,7],[7,4],
-                [0,4],[1,5],[2,6],[3,7]
+                [0, 1], [1, 2], [2, 3], [3, 0],
+                [4, 5], [5, 6], [6, 7], [7, 4],
+                [0, 4], [1, 5], [2, 6], [3, 7]
             ];
 
             ctx.strokeStyle = activeColor;
@@ -455,4 +577,5 @@
         renderFrame();
     </script>
 </body>
+
 </html>
