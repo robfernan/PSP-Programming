@@ -52,17 +52,67 @@ function activate(context) {
         }
 
         const ppssppExecutable = getPPSSPPPath();
-        const ebootPath = path.join(projectDir, 'build', 'EBOOT.PBP');
+        let buildCmd = '';
+        let candidateEbootPaths = [];
+        let projectType = 'CMake';
 
-        vscode.window.showInformationMessage(`PSP Dev Studio: Building & Launching [${path.basename(projectDir)}]...`);
+        if (fs.existsSync(path.join(projectDir, 'Cargo.toml'))) {
+            projectType = 'Rust';
+            buildCmd = 'cargo psp --release';
+            candidateEbootPaths = [
+                path.join(projectDir, 'target', 'mipsel-sony-psp', 'release', 'EBOOT.PBP'),
+                path.join(projectDir, 'target', 'mipsel-sony-psp', 'debug', 'EBOOT.PBP'),
+                path.join(projectDir, 'EBOOT.PBP')
+            ];
+        } else if (fs.existsSync(path.join(projectDir, 'build.zig'))) {
+            projectType = 'Zig';
+            buildCmd = 'zig build';
+            candidateEbootPaths = [
+                path.join(projectDir, 'zig-out', 'bin', 'EBOOT.PBP'),
+                path.join(projectDir, 'build', 'EBOOT.PBP'),
+                path.join(projectDir, 'EBOOT.PBP')
+            ];
+        } else {
+            projectType = 'CMake';
+            buildCmd = 'mkdir -p build && cd build && psp-cmake .. && make';
+            candidateEbootPaths = [
+                path.join(projectDir, 'build', 'EBOOT.PBP'),
+                path.join(projectDir, 'EBOOT.PBP')
+            ];
+        }
 
-        // Trigger compilation
-        exec(`mkdir -p build && cd build && psp-cmake .. && make`, { cwd: projectDir }, (err, stdout, stderr) => {
-            if (fs.existsSync(ebootPath)) {
+        const outputChannel = vscode.window.createOutputChannel('PSP Dev Studio');
+        outputChannel.clear();
+        outputChannel.show(true);
+        outputChannel.appendLine(`[PSP Dev Studio] Detected ${projectType} project in: ${projectDir}`);
+        outputChannel.appendLine(`[PSP Dev Studio] Running command: ${buildCmd}\n`);
+
+        vscode.window.showInformationMessage(`PSP Dev Studio: Building & Launching [${path.basename(projectDir)}] (${projectType})...`);
+
+        exec(buildCmd, { cwd: projectDir }, (err, stdout, stderr) => {
+            if (stdout) { outputChannel.append(stdout); }
+            if (stderr) { outputChannel.append(stderr); }
+            if (err) {
+                outputChannel.appendLine(`\n[PSP Dev Studio] Process exited with error: ${err.message}`);
+            }
+
+            const foundEboot = candidateEbootPaths.find(p => fs.existsSync(p));
+
+            if (foundEboot) {
+                outputChannel.appendLine(`\n[PSP Dev Studio] Found EBOOT: ${foundEboot}`);
                 vscode.window.showInformationMessage(`PSP Dev Studio: Launching ${path.basename(projectDir)} in PPSSPP!`);
-                exec(`"${ppssppExecutable}" "${ebootPath}"`);
+                exec(`"${ppssppExecutable}" "${foundEboot}"`);
             } else {
-                vscode.window.showWarningMessage('PSP Dev Studio: Compiled, but EBOOT.PBP was not found in build directory. Check compiler output.');
+                outputChannel.appendLine(`\n[PSP Dev Studio] Build failed or EBOOT.PBP was not found in candidate paths:`);
+                candidateEbootPaths.forEach(p => outputChannel.appendLine(`  - ${p}`));
+
+                if (projectType === 'Rust' && err) {
+                    vscode.window.showErrorMessage('PSP Dev Studio: Rust build failed. Make sure cargo-psp is installed (`cargo install cargo-psp`). See Output panel.');
+                } else if (err) {
+                    vscode.window.showErrorMessage(`PSP Dev Studio: Compilation failed for ${projectType}. Check Output panel for details.`);
+                } else {
+                    vscode.window.showWarningMessage('PSP Dev Studio: Compiled, but EBOOT.PBP was not found. Check compiler output in the Output panel.');
+                }
             }
         });
     });
