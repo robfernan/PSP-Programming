@@ -10,7 +10,6 @@
             --accent-cyan: #00e5ff;
             --accent-pink: #ff2d87;
             --accent-green: #00ff88;
-            --accent-orange: #ff9900;
             --text-color: #e2e8f0;
         }
 
@@ -26,10 +25,9 @@
             user-select: none;
         }
 
-        /* Top Bar & Model Selector */
         .toolbar {
             width: 100%;
-            max-width: 720px;
+            max-width: 820px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -37,7 +35,7 @@
             background: #141724;
             border: 1px solid #282f45;
             border-radius: 8px;
-            padding: 10px 16px;
+            padding: 8px 16px;
             box-sizing: border-box;
         }
 
@@ -62,7 +60,7 @@
             background: transparent;
             border: none;
             color: #8391a8;
-            padding: 5px 10px;
+            padding: 5px 12px;
             font-size: 11px;
             font-weight: 600;
             border-radius: 4px;
@@ -81,7 +79,6 @@
             box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
         }
 
-        /* Hardware Specs Badge */
         .spec-badge {
             font-size: 11px;
             font-family: monospace;
@@ -92,200 +89,158 @@
             border: 1px solid rgba(0, 255, 136, 0.25);
         }
 
-        /* Shell Container */
-        .viewport-wrapper {
+        /* Viewport Frame Container */
+        .stage-area {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 380px;
+            position: relative;
+            min-height: 420px;
             margin-bottom: 12px;
         }
 
-        /* ------------------------------------------------------------- */
-        /* MODEL 0: FRAMELESS (Screen Only)                              */
-        /* ------------------------------------------------------------- */
-        .shell-frameless {
+        /* Raw Screen Canvas */
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* MODEL SKINS MAPPING EXACT PHYSICAL IMAGES                          */
+        /* ------------------------------------------------------------------ */
+
+        /* 1. FRAMELESS: Direct 480x272 output */
+        .skin-frameless {
             border: 2px solid #2c344a;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 229, 255, 0.15);
         }
 
-        /* ------------------------------------------------------------- */
-        /* MODEL 1: PSP-1000 ("The Original Tank" - Thick, Heavy Bezel)  */
-        /* ------------------------------------------------------------- */
-        .shell-psp1000 {
-            background: radial-gradient(circle at 50% 25%, #2a3147, #131722);
-            border: 5px solid #363e59;
-            border-radius: 54px;
-            padding: 24px 44px;
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8), inset 0 2px 6px rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-
-        /* ------------------------------------------------------------- */
-        /* MODEL 2: PSP-2000 / Slim ("Sleek Silver Trim & Slimmed Body") */
-        /* ------------------------------------------------------------- */
-        .shell-psp2000 {
-            background: linear-gradient(135deg, #242938, #181c28);
-            border: 3px solid #8e9bb0; /* Glossy metallic chrome border */
-            border-radius: 44px;
-            padding: 20px 38px;
-            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7), 0 0 12px rgba(142, 155, 176, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* ------------------------------------------------------------- */
-        /* MODEL 3: PSP-3000 ("Vibrant Screen, Mic Hole & Rounder Edges")*/
-        /* ------------------------------------------------------------- */
-        .shell-psp3000 {
-            background: radial-gradient(circle at 50% 30%, #1e2436, #0e111a);
-            border: 3px solid #00e5ff; /* Glowing cyan accent */
-            border-radius: 40px;
-            padding: 18px 36px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 229, 255, 0.25);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* ------------------------------------------------------------- */
-        /* MODEL 4: PSP Go ("Compact Slider Handheld")                   */
-        /* ------------------------------------------------------------- */
-        .shell-pspgo {
-            background: #171b26;
-            border: 4px solid #2b3245;
-            border-radius: 28px;
-            padding: 16px 20px 24px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.85);
-            width: 520px;
-        }
-
-        .pspgo-bottom-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-top: 14px;
-            padding: 10px 20px 0 20px;
-            border-top: 1px solid #2c344a;
-            box-sizing: border-box;
-        }
-
-        /* ------------------------------------------------------------- */
-        /* MODEL 5: PSP Street E1000 ("Matte Charcoal Stealth")          */
-        /* ------------------------------------------------------------- */
-        .shell-street {
-            background: #121317; /* Matte Carbon Black */
-            border: 3px solid #22242c;
-            border-radius: 46px;
-            padding: 22px 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            gap: 22px;
-        }
-
-        /* Screen Display Box */
-        .screen-box {
-            width: 480px;
-            height: 272px;
-            background: #000;
-            border-radius: 4px;
-            overflow: hidden;
+        /* 2. PSP-1000: Photorealistic Handheld Frame */
+        .skin-psp1000 {
+            width: 800px;
+            height: 344px;
             position: relative;
-            box-shadow: inset 0 0 12px rgba(0,0,0,0.9);
+        }
+        .skin-psp1000 .console-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 800px;
+            height: 344px;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .skin-psp1000 .screen-mount {
+            position: absolute;
+            top: 30px;
+            left: 172px;
+            width: 456px;
+            height: 258px;
+            z-index: 1;
+            background: #000;
+        }
+        .skin-psp1000 .screen-mount canvas {
+            width: 456px;
+            height: 258px;
         }
 
-        canvas {
-            width: 480px;
-            height: 272px;
-            image-rendering: pixelated;
-            display: block;
+        /* 3. PSP GO: Slider Chassis */
+        .skin-pspgo {
+            width: 440px;
+            height: 440px;
+            position: relative;
+        }
+        .skin-pspgo .console-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 440px;
+            height: 440px;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .skin-pspgo .screen-mount {
+            position: absolute;
+            top: 97px;
+            left: 101px;
+            width: 222px;
+            height: 126px;
+            z-index: 1;
+            background: #000;
+        }
+        .skin-pspgo .screen-mount canvas {
+            width: 222px;
+            height: 126px;
         }
 
-        /* Analog Thumbstick */
-        .analog-nub {
-            width: 38px;
-            height: 38px;
-            background: radial-gradient(circle at 40% 40%, #3a435c, #1a1e2b);
-            border: 2px solid #4a5575;
+        /* 4. PSP STREET (E1000): Matte Vector Unibody */
+        .skin-street {
+            width: 760px;
+            height: 322px;
+            position: relative;
+        }
+        .skin-street .console-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 760px;
+            height: 322px;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .skin-street .screen-mount {
+            position: absolute;
+            top: 26px;
+            left: 165px;
+            width: 430px;
+            height: 246px;
+            z-index: 1;
+            background: #000;
+        }
+        .skin-street .screen-mount canvas {
+            width: 430px;
+            height: 246px;
+        }
+
+        /* Interactive Touch Hitboxes */
+        .hitbox {
+            position: absolute;
+            z-index: 10;
+            cursor: pointer;
             border-radius: 50%;
-            margin-top: 10px;
-            cursor: pointer;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-            transition: transform 0.1s;
+            background: rgba(0, 229, 255, 0.0);
+            transition: background 0.1s;
+        }
+        .hitbox:active, .hitbox.pressed {
+            background: rgba(0, 229, 255, 0.35);
+            box-shadow: 0 0 12px var(--accent-cyan);
         }
 
-        .analog-nub:active {
-            transform: scale(0.92) translate(2px, 2px);
-        }
+        /* Hitbox positioning for PSP-1000 */
+        .skin-psp1000 .hitbox-dpad-up    { top: 90px; left: 54px; width: 34px; height: 34px; border-radius: 6px; }
+        .skin-psp1000 .hitbox-dpad-down  { top: 165px; left: 54px; width: 34px; height: 34px; border-radius: 6px; }
+        .skin-psp1000 .hitbox-dpad-left  { top: 128px; left: 18px; width: 34px; height: 34px; border-radius: 6px; }
+        .skin-psp1000 .hitbox-dpad-right { top: 128px; left: 90px; width: 34px; height: 34px; border-radius: 6px; }
+        .skin-psp1000 .hitbox-analog     { top: 220px; left: 40px; width: 48px; height: 48px; }
 
-        /* D-Pad Buttons */
-        .dpad-grid {
-            display: grid;
-            grid-template-columns: 26px 26px 26px;
-            grid-template-rows: 26px 26px 26px;
-            gap: 3px;
-        }
+        .skin-psp1000 .hitbox-tri   { top: 86px; left: 708px; width: 34px; height: 34px; }
+        .skin-psp1000 .hitbox-sq    { top: 124px; left: 668px; width: 34px; height: 34px; }
+        .skin-psp1000 .hitbox-cir   { top: 124px; left: 746px; width: 34px; height: 34px; }
+        .skin-psp1000 .hitbox-cross { top: 164px; left: 708px; width: 34px; height: 34px; }
 
-        .btn-dir {
-            background: #202636;
-            border: 1px solid #3d4966;
-            color: #9cb0cf;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
+        /* Hitbox positioning for PSP Go */
+        .skin-pspgo .hitbox-dpad-up    { top: 268px; left: 118px; width: 28px; height: 28px; }
+        .skin-pspgo .hitbox-dpad-down  { top: 326px; left: 118px; width: 28px; height: 28px; }
+        .skin-pspgo .hitbox-dpad-left  { top: 297px; left: 90px; width: 28px; height: 28px; }
+        .skin-pspgo .hitbox-dpad-right { top: 297px; left: 146px; width: 28px; height: 28px; }
+        .skin-pspgo .hitbox-analog     { top: 290px; left: 168px; width: 36px; height: 36px; }
 
-        .btn-dir:active, .btn-dir.pressed {
-            background: var(--accent-cyan);
-            color: #0b0f19;
-            transform: scale(0.92);
-        }
-
-        /* PlayStation Face Buttons */
-        .face-grid {
-            display: grid;
-            grid-template-columns: 26px 26px 26px;
-            grid-template-rows: 26px 26px 26px;
-            gap: 3px;
-        }
-
-        .btn-face {
-            background: #202636;
-            border: 1px solid #3d4966;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-
-        .btn-face.tri { grid-column: 2; grid-row: 1; color: #00ff88; }
-        .btn-face.sq  { grid-column: 1; grid-row: 2; color: #ff2d87; }
-        .btn-face.cir { grid-column: 3; grid-row: 2; color: #ff4d4d; }
-        .btn-face.cross { grid-column: 2; grid-row: 3; color: #00e5ff; }
-
-        .btn-face:active, .btn-face.pressed {
-            background: #ffffff;
-            color: #000;
-            transform: scale(0.92);
-        }
+        .skin-pspgo .hitbox-tri   { top: 268px; left: 298px; width: 28px; height: 28px; }
+        .skin-pspgo .hitbox-sq    { top: 297px; left: 268px; width: 28px; height: 28px; }
+        .skin-pspgo .hitbox-cir   { top: 297px; left: 326px; width: 28px; height: 28px; }
+        .skin-pspgo .hitbox-cross { top: 326px; left: 298px; width: 28px; height: 28px; }
 
         .footer-keys {
             font-size: 12px;
@@ -305,18 +260,14 @@
 </head>
 <body>
 
-    <!-- Header Toolbar with Model Selector -->
     <div class="toolbar">
         <div class="title-area">
-            <h2>PlayStation Portable In-IDE Live Preview</h2>
+            <h2>PlayStation Portable In-IDE Live Web Preview</h2>
         </div>
 
-        <!-- Model Tabs -->
         <div class="model-tabs">
             <button class="tab-btn" onclick="selectModel('frameless')">Frameless</button>
             <button class="tab-btn active" onclick="selectModel('psp1000')">PSP-1000</button>
-            <button class="tab-btn" onclick="selectModel('psp2000')">PSP-2000 Slim</button>
-            <button class="tab-btn" onclick="selectModel('psp3000')">PSP-3000</button>
             <button class="tab-btn" onclick="selectModel('pspgo')">PSP Go</button>
             <button class="tab-btn" onclick="selectModel('street')">PSP Street</button>
         </div>
@@ -324,99 +275,74 @@
         <span class="spec-badge" id="model-spec">PSP-1000: 32MB RAM</span>
     </div>
 
-    <!-- Active Hardware Shell Viewport -->
-    <div class="viewport-wrapper">
-        <div id="shell-container" class="shell-psp1000">
-            
-            <!-- Left Wing Controls (Hidden in Frameless) -->
-            <div id="left-controls" style="display: flex; flex-direction: column; align-items: center;">
-                <div class="dpad-grid">
-                    <div style="grid-column: 2; grid-row: 1;" class="btn-dir" id="k-up">▲</div>
-                    <div style="grid-column: 1; grid-row: 2;" class="btn-dir" id="k-left">◀</div>
-                    <div style="grid-column: 3; grid-row: 2;" class="btn-dir" id="k-right">▶</div>
-                    <div style="grid-column: 2; grid-row: 3;" class="btn-dir" id="k-down">▼</div>
-                </div>
-                <div class="analog-nub" title="PSP Analog Stick"></div>
-            </div>
+    <!-- Active Physical Console Stage -->
+    <div class="stage-area">
+        <div id="active-skin" class="skin-psp1000">
+            <!-- Handheld Cutout Bezel Graphic -->
+            <img id="console-art" class="console-bg" src="psp-1000-frame.png" alt="Console Frame">
 
-            <!-- Authentic 480x272 PSP Screen -->
-            <div class="screen-box">
+            <!-- Real Hardware Viewport Screen -->
+            <div class="screen-mount" id="screen-mount">
                 <canvas id="psp-screen" width="480" height="272"></canvas>
             </div>
 
-            <!-- Right Wing Controls (Hidden in Frameless) -->
-            <div id="right-controls" style="display: flex; flex-direction: column; align-items: center;">
-                <div class="face-grid">
-                    <div class="btn-face tri" id="k-tri">▲</div>
-                    <div class="btn-face sq" id="k-sq">■</div>
-                    <div class="btn-face cir" id="k-cir">●</div>
-                    <div class="btn-face cross" id="k-cross">✖</div>
-                </div>
-                <div style="height: 38px; margin-top: 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #58657d; font-family: monospace;">SONY</div>
-            </div>
+            <!-- Authentic Touch Screen Hitboxes -->
+            <div id="hitbox-container">
+                <div class="hitbox hitbox-dpad-up" id="hb-up" title="D-Pad Up"></div>
+                <div class="hitbox hitbox-dpad-down" id="hb-down" title="D-Pad Down"></div>
+                <div class="hitbox hitbox-dpad-left" id="hb-left" title="D-Pad Left"></div>
+                <div class="hitbox hitbox-dpad-right" id="hb-right" title="D-Pad Right"></div>
+                <div class="hitbox hitbox-analog" id="hb-analog" title="Analog Stick"></div>
 
-            <!-- PSP Go Sliding Lower Tray (Only in PSP Go Mode) -->
-            <div id="pspgo-tray" class="pspgo-bottom-controls" style="display: none;">
-                <div class="dpad-grid">
-                    <div style="grid-column: 2; grid-row: 1;" class="btn-dir">▲</div>
-                    <div style="grid-column: 1; grid-row: 2;" class="btn-dir">◀</div>
-                    <div style="grid-column: 3; grid-row: 2;" class="btn-dir">▶</div>
-                    <div style="grid-column: 2; grid-row: 3;" class="btn-dir">▼</div>
-                </div>
-                <div class="analog-nub" style="margin-top: 0;"></div>
-                <div class="face-grid">
-                    <div class="btn-face tri">▲</div>
-                    <div class="btn-face sq">■</div>
-                    <div class="btn-face cir">●</div>
-                    <div class="btn-face cross">✖</div>
-                </div>
+                <div class="hitbox hitbox-tri" id="hb-tri" title="Triangle"></div>
+                <div class="hitbox hitbox-sq" id="hb-sq" title="Square"></div>
+                <div class="hitbox hitbox-cir" id="hb-cir" title="Circle"></div>
+                <div class="hitbox hitbox-cross" id="hb-cross" title="Cross"></div>
             </div>
-
         </div>
     </div>
 
     <div class="footer-keys">
-        🎮 <strong>Interactive Controls:</strong> Click on-screen buttons or use Keyboard: Arrow Keys = D-Pad | <kbd>Z</kbd> = ✖ | <kbd>X</kbd> = ● | <kbd>A</kbd> = ■ | <kbd>S</kbd> = ▲
+        🎮 <strong>Interactive Handheld Touchpad:</strong> Click the real console buttons on-screen or use Keyboard: Arrow Keys = D-Pad | <kbd>Z</kbd> = ✖ | <kbd>X</kbd> = ● | <kbd>A</kbd> = ■ | <kbd>S</kbd> = ▲
     </div>
 
     <script>
         const canvas = document.getElementById('psp-screen');
         const ctx = canvas.getContext('2d');
-        const container = document.getElementById('shell-container');
-        const leftCtrl = document.getElementById('left-controls');
-        const rightCtrl = document.getElementById('right-controls');
-        const pspgoTray = document.getElementById('pspgo-tray');
+        const skinContainer = document.getElementById('active-skin');
+        const consoleArt = document.getElementById('console-art');
         const specBadge = document.getElementById('model-spec');
+        const hitboxBox = document.getElementById('hitbox-container');
 
         const modelSpecs = {
             'frameless': 'Pure Output (480x272)',
-            'psp1000': 'PSP-1000: 32MB RAM | Thick Bezel',
-            'psp2000': 'PSP-2000 Slim: 64MB RAM | Silver Trim',
-            'psp3000': 'PSP-3000: Enhanced Color Gamut & Mic',
-            'pspgo': 'PSP Go: Slider Handheld | 16GB Flash',
-            'street': 'PSP Street (E1000): Matte Carbon Black'
+            'psp1000': 'PSP-1000: 32MB RAM | Original Handheld',
+            'pspgo': 'PSP Go: 64MB RAM | Slider Chassis',
+            'street': 'PSP Street (E1000): Matte Carbon Unibody'
         };
 
         function selectModel(model) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            // Reset classes
-            container.className = 'shell-' + model;
+            skinContainer.className = 'skin-' + model;
             specBadge.textContent = modelSpecs[model];
 
             if (model === 'frameless') {
-                leftCtrl.style.display = 'none';
-                rightCtrl.style.display = 'none';
-                pspgoTray.style.display = 'none';
+                consoleArt.style.display = 'none';
+                hitboxBox.style.display = 'none';
+            } else if (model === 'psp1000') {
+                consoleArt.style.display = 'block';
+                consoleArt.src = 'psp-1000-frame.png';
+                hitboxBox.style.display = 'block';
             } else if (model === 'pspgo') {
-                leftCtrl.style.display = 'none';
-                rightCtrl.style.display = 'none';
-                pspgoTray.style.display = 'flex';
-            } else {
-                leftCtrl.style.display = 'flex';
-                rightCtrl.style.display = 'flex';
-                pspgoTray.style.display = 'none';
+                consoleArt.style.display = 'block';
+                consoleArt.src = 'psp-go-frame.png';
+                hitboxBox.style.display = 'block';
+            } else if (model === 'street') {
+                consoleArt.style.display = 'block';
+                consoleArt.src = 'psp-street-frame.svg';
+                hitboxBox.style.display = 'none';
             }
         }
 
@@ -431,35 +357,36 @@
         window.addEventListener('keydown', e => { keys[e.code] = true; });
         window.addEventListener('keyup', e => { keys[e.code] = false; });
 
-        // Touch / Click Support for On-Screen Buttons
-        function bindButton(id, keycode, color) {
-            const btn = document.getElementById(id);
-            if (!btn) return;
-            btn.addEventListener('mousedown', () => {
+        // Touchpad Hitbox Bindings
+        function bindTouch(id, keycode, color) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('mousedown', () => {
                 keys[keycode] = true;
-                btn.classList.add('pressed');
+                el.classList.add('pressed');
                 if (color) activeColor = color;
             });
             window.addEventListener('mouseup', () => {
                 keys[keycode] = false;
-                btn.classList.remove('pressed');
+                el.classList.remove('pressed');
             });
         }
 
-        bindButton('k-up', 'ArrowUp');
-        bindButton('k-down', 'ArrowDown');
-        bindButton('k-left', 'ArrowLeft');
-        bindButton('k-right', 'ArrowRight');
-        bindButton('k-cross', 'KeyZ', '#00e5ff');
-        bindButton('k-cir', 'KeyX', '#ff4d4d');
-        bindButton('k-sq', 'KeyA', '#ff2d87');
-        bindButton('k-tri', 'KeyS', '#00ff88');
+        bindTouch('hb-up', 'ArrowUp');
+        bindTouch('hb-down', 'ArrowDown');
+        bindTouch('hb-left', 'ArrowLeft');
+        bindTouch('hb-right', 'ArrowRight');
+        bindTouch('hb-cross', 'KeyZ', '#00e5ff');
+        bindTouch('hb-cir', 'KeyX', '#ff4d4d');
+        bindTouch('hb-sq', 'KeyA', '#ff2d87');
+        bindTouch('hb-tri', 'KeyS', '#00ff88');
+        bindTouch('hb-analog', 'ArrowRight');
 
         function renderFrame() {
             ctx.fillStyle = '#0a0d14';
             ctx.fillRect(0, 0, 480, 272);
 
-            // Input Handling
+            // Handle Input State
             if (keys['ArrowUp']) posY = Math.max(30, posY - 2);
             if (keys['ArrowDown']) posY = Math.min(242, posY + 2);
             if (keys['ArrowLeft']) posX = Math.max(30, posX - 2);
@@ -470,7 +397,7 @@
             if (keys['KeyA']) activeColor = '#ff2d87';
             if (keys['KeyS']) activeColor = '#00ff88';
 
-            // Top Status Bar (PSP XMB Style)
+            // PSP XMB Navigation Bar
             ctx.fillStyle = '#171c26';
             ctx.fillRect(0, 0, 480, 20);
             ctx.fillStyle = '#8b9bb4';
@@ -515,10 +442,10 @@
             });
             ctx.stroke();
 
-            // Lower Status line
+            // Status display
             ctx.fillStyle = '#65748a';
             ctx.font = '11px sans-serif';
-            ctx.fillText('Live Hardware Emulation', 12, 258);
+            ctx.fillText('Live In-IDE Handheld Emulation', 12, 258);
             ctx.fillStyle = activeColor;
             ctx.fillText('D-Pad: Move  |  Buttons: Change Color', 245, 258);
 
