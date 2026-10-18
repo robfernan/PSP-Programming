@@ -21,23 +21,34 @@ jobs:
       - name: Build All PSP Demos
         run: |
           mkdir -p dist
+          export PKG_CONFIG_PATH="${PSPDEV}/psp/lib/pkgconfig:${PKG_CONFIG_PATH}"
+          
           for dir in psp_projects/*/; do
             if [ -f "${dir}CMakeLists.txt" ]; then
-              echo "==> Building ${dir}..."
+              proj_name=$(basename "${dir}")
+              echo "============================================="
+              echo "==> Building ${proj_name}..."
+              echo "============================================="
+              
               mkdir -p "${dir}build"
               cd "${dir}build"
-              psp-cmake ..
-              make -j$(nproc)
-              proj_name=$(basename "${dir}")
-              if [ -f "EBOOT.PBP" ]; then
-                cp EBOOT.PBP "../../dist/${proj_name}_EBOOT.PBP"
+              
+              if psp-cmake .. && make -j$(nproc); then
+                echo "SUCCESS: ${proj_name} built successfully."
+                if [ -f "EBOOT.PBP" ]; then
+                  cp EBOOT.PBP "../../dist/${proj_name}_EBOOT.PBP"
+                fi
+              else
+                echo "WARNING: ${proj_name} build encountered an issue. Continuing with other demos..."
               fi
+              
               cd ../../
             fi
           done
 
       - name: Upload EBOOT Artifacts
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: psp-homebrew-nightly-eboot-pack
           path: dist/

@@ -1,7 +1,7 @@
 {
   "name": "vscode-psp-toolkit",
   "displayName": "PSP Dev Studio (PlayStation Portable)",
-  "description": "One-click build, diagnostics, and launch for PSP homebrew in PPSSPP. Automated toolchain checks, snippets, and templates.",
+  "description": "Cross-platform build, automated toolchain diagnostics, and instant PPSSPP runner for PSP homebrew in C, SDL2, Rust, and Zig.",
   "version": "1.0.0",
   "publisher": "robfernan",
   "engines": {
@@ -17,26 +17,37 @@
     "workspaceContains:**/CMakeLists.txt",
     "workspaceContains:**/*.pbp",
     "onCommand:psp.runPPSSPP",
-    "onCommand:psp.openDashboard"
+    "onCommand:psp.openDashboard",
+    "onCommand:psp.installToolchain"
   ],
   "main": "./src/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "psp.runPPSSPP",
-        "title": "PSP: Run Project in PPSSPP",
+        "title": "PSP: Run in PPSSPP",
         "icon": "$(play)"
       },
       {
         "command": "psp.openDashboard",
         "title": "PSP: Open Dev Studio Dashboard",
         "icon": "$(dashboard)"
+      },
+      {
+        "command": "psp.installToolchain",
+        "title": "PSP: Auto-Install PPSSPP & Tools",
+        "icon": "$(cloud-download)"
       }
     ],
     "menus": {
       "editor/title": [
         {
           "command": "psp.runPPSSPP",
+          "group": "navigation",
+          "when": "resourceExtname =~ /\\.(c|cpp|rs|zig|txt)/"
+        },
+        {
+          "command": "psp.openDashboard",
           "group": "navigation",
           "when": "resourceExtname =~ /\\.(c|cpp|rs|zig|txt)/"
         }
