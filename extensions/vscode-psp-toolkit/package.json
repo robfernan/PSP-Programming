@@ -15,10 +15,7 @@
   "icon": "media/icon.jpg",
   "activationEvents": [
     "workspaceContains:**/CMakeLists.txt",
-    "workspaceContains:**/*.pbp",
-    "onCommand:psp.runPPSSPP",
-    "onCommand:psp.openDashboard",
-    "onCommand:psp.installToolchain"
+    "workspaceContains:**/*.pbp"
   ],
   "main": "./src/extension.js",
   "contributes": {
