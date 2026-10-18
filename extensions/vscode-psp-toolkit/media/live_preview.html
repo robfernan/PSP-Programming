@@ -396,7 +396,8 @@
 
     <div class="toolbar">
         <div class="title-area">
-            <h2>PlayStation Portable In-IDE Live Web Preview</h2>
+            <h2 id="live-title">PSP Live Preview</h2>
+            <span style="font-size: 11px; color: #8391a8;" id="live-subtitle">C / SDL2 / Rust / Zig</span>
         </div>
 
         <div class="model-tabs">
@@ -406,7 +407,12 @@
             <button class="tab-btn" onclick="selectModel('street')">PSP Street</button>
         </div>
 
-        <span class="spec-badge" id="model-spec">PSP-1000: 32MB RAM</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <a href="https://root-hunter.github.io/ppsspp-web/" target="_blank" class="tab-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #00e5ff; color: #00e5ff;">
+                🌐 Web PPSSPP
+            </a>
+            <span class="spec-badge" id="model-spec">PSP-1000: 32MB RAM</span>
+        </div>
     </div>
 
     <!-- Active Physical Console Stage -->
@@ -586,6 +592,19 @@
 
             requestAnimationFrame(renderFrame);
         }
+
+        // Listen for active project updates from extension
+        window.addEventListener('message', event => {
+            const message = event.data;
+            if (message.command === 'setProject') {
+                if (message.projectName) {
+                    document.getElementById('live-title').textContent = message.projectName;
+                }
+                if (message.fileType) {
+                    document.getElementById('live-subtitle').textContent = `Target Source: [${message.fileType}]`;
+                }
+            }
+        });
 
         renderFrame();
     </script>

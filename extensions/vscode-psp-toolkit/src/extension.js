@@ -52,13 +52,11 @@ function activate(context) {
         }
 
         const ppssppExecutable = getPPSSPPPath();
-        let buildCmd = '';
         let candidateEbootPaths = [];
         let projectType = 'CMake';
 
         if (fs.existsSync(path.join(projectDir, 'Cargo.toml'))) {
             projectType = 'Rust';
-            buildCmd = 'cargo psp --release';
             candidateEbootPaths = [
                 path.join(projectDir, 'target', 'mipsel-sony-psp', 'release', 'EBOOT.PBP'),
                 path.join(projectDir, 'target', 'mipsel-sony-psp', 'debug', 'EBOOT.PBP'),
@@ -66,7 +64,6 @@ function activate(context) {
             ];
         } else if (fs.existsSync(path.join(projectDir, 'build.zig'))) {
             projectType = 'Zig';
-            buildCmd = 'zig build';
             candidateEbootPaths = [
                 path.join(projectDir, 'zig-out', 'bin', 'EBOOT.PBP'),
                 path.join(projectDir, 'build', 'EBOOT.PBP'),
@@ -74,7 +71,6 @@ function activate(context) {
             ];
         } else {
             projectType = 'CMake';
-            buildCmd = 'mkdir -p build && cd build && psp-cmake .. && make';
             candidateEbootPaths = [
                 path.join(projectDir, 'build', 'EBOOT.PBP'),
                 path.join(projectDir, 'EBOOT.PBP')
@@ -96,23 +92,47 @@ function activate(context) {
 
         const existingEboot = candidateEbootPaths.find(p => fs.existsSync(p));
 
-        if (!buildCmd) {
-            if (existingEboot) {
-                launchInPPSSPP(existingEboot);
-            } else {
-                vscode.window.showErrorMessage(`PSP Dev Studio: No EBOOT.PBP found for ${path.basename(projectDir)}.`);
-            }
+        // If the active editor is directly focused on an EBOOT.PBP, run it immediately!
+        if (activeEditor && activeEditor.document.uri.fsPath.endsWith('EBOOT.PBP') && fs.existsSync(activeEditor.document.uri.fsPath)) {
+            outputChannel.appendLine(`[PSP Dev Studio] Directly launching active EBOOT file: ${activeEditor.document.uri.fsPath}`);
+            launchInPPSSPP(activeEditor.document.uri.fsPath);
             return;
         }
 
-        vscode.window.showInformationMessage(`PSP Dev Studio: Building & Launching [${path.basename(projectDir)}] (${projectType})...`);
-        outputChannel.appendLine(`[PSP Dev Studio] Running command: ${buildCmd}\n`);
+        // Determine the best build command based on environment & OS
+        let buildCmd = '';
+        const isWindows = process.platform === 'win32';
+        const workspaceRoot = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : path.dirname(projectDir);
+        const relToRoot = path.relative(workspaceRoot, projectDir).replace(/\\/g, '/');
+        const workdirInContainer = `/workspace/${relToRoot}`;
+
+        if (projectType === 'Rust') {
+            buildCmd = 'cargo psp --release';
+        } else if (projectType === 'Zig') {
+            if (isWindows) {
+                buildCmd = `docker run --rm -v "${workspaceRoot}:/workspace" -w "${workdirInContainer}" pspdev/pspdev:latest sh -c "zig build"`;
+            } else {
+                buildCmd = 'zig build';
+            }
+        } else {
+            // CMake PSP build
+            if (isWindows) {
+                buildCmd = `docker run --rm -v "${workspaceRoot}:/workspace" -w "${workdirInContainer}" pspdev/pspdev:latest sh -c "mkdir -p build && cd build && psp-cmake .. && make"`;
+            } else {
+                buildCmd = `mkdir -p build && cd build && psp-cmake .. && make`;
+            }
+        }
+
+        // If pre-existing EBOOT exists and no build command needed or user requested run
+        outputChannel.appendLine(`[PSP Dev Studio] Building & Launching [${path.basename(projectDir)}] (${projectType})...`);
+        outputChannel.appendLine(`[PSP Dev Studio] Command: ${buildCmd}\n`);
+        vscode.window.showInformationMessage(`PSP Dev Studio: Compiling [${path.basename(projectDir)}]...`);
 
         exec(buildCmd, { cwd: projectDir }, (err, stdout, stderr) => {
             if (stdout) { outputChannel.append(stdout); }
             if (stderr) { outputChannel.append(stderr); }
             if (err) {
-                outputChannel.appendLine(`\n[PSP Dev Studio] Process error: ${err.message}`);
+                outputChannel.appendLine(`\n[PSP Dev Studio] Build command error: ${err.message}`);
             }
 
             const foundEboot = candidateEbootPaths.find(p => fs.existsSync(p));
@@ -176,15 +196,40 @@ function activate(context) {
 
     // 4. Open In-IDE Live Web Preview (WASM / Virtual PSP Console)
     let livePreviewDisposable = vscode.commands.registerCommand('psp.openLivePreview', function () {
+        const activeEditor = vscode.window.activeTextEditor;
+        let activeProjectName = 'PSP Live Preview';
+        let activeFileType = 'C';
+
+        if (activeEditor) {
+            const fileName = path.basename(activeEditor.document.uri.fsPath);
+            let dir = path.dirname(activeEditor.document.uri.fsPath);
+            activeProjectName = path.basename(dir);
+            if (fileName.endsWith('.zig')) activeFileType = 'Zig';
+            else if (fileName.endsWith('.rs')) activeFileType = 'Rust';
+            else if (fileName.endsWith('.c') || fileName.endsWith('.h')) activeFileType = 'C / SDL2';
+        }
+
         const panel = vscode.window.createWebviewPanel(
             'pspLivePreview',
-            'PSP Live Preview (480x272)',
+            `PSP Live Preview: ${activeProjectName}`,
             vscode.ViewColumn.Beside,
-            { enableScripts: true }
+            { enableScripts: true, retainContextWhenHidden: true }
         );
 
         const htmlPath = path.join(context.extensionPath, 'media', 'live_preview.html');
-        panel.webview.html = fs.readFileSync(htmlPath, 'utf8');
+        let htmlContent = fs.readFileSync(htmlPath, 'utf8');
+        
+        // Pass the active project details to the webview
+        panel.webview.html = htmlContent;
+
+        // Post message with project information once webview is ready
+        setTimeout(() => {
+            panel.webview.postMessage({
+                command: 'setProject',
+                projectName: activeProjectName,
+                fileType: activeFileType
+            });
+        }, 300);
     });
 
     context.subscriptions.push(runDisposable);

@@ -17,6 +17,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     pspnet
     pspnet_inet
     pspnet_apctl
+    pspkubridge
     c
 )
 
